@@ -12,8 +12,9 @@ import Icon from "@material-ui/core/Icon";
 import { makeStyles } from "@material-ui/core/styles";
 
 import api from "@api/user"
+import auth from "@api/auth"
 import { signInAction } from "@redux/userSlice";
-import dbConnect from "@utils/db"
+// import dbConnect from "@utils/db"
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -87,7 +88,8 @@ const SignIn = (props) => {
       if (data.error) {
         setValues({ ...values, error: data.error });
       } else {
-        setToken(data.token, () => {
+        
+        auth.setToken(data.token, () => {
           dispatch(
             signInAction({
               ...data.user,
@@ -176,13 +178,14 @@ export default SignIn;
 
 
 
-export const getServerSideProps = async (ctx) => {
+// export const getServerSideProps = async (ctx) => {
 
+//       await dbConnect()
       
 
-  return {
-    props:{
-      data:null
-    }
-  }
-}
+//   return {
+//     props:{
+//       data: null
+//     }
+//   }
+// }

@@ -5,6 +5,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import Header from "@components/Header";
+import dbConnect from "@utils/db"
 
 
 const classroomImg = "/images/classroom.jpg";
@@ -58,3 +59,12 @@ const Home = () => {
 export default Home;
 
 
+export const getStaticProps = async (ctx) => {
+  await dbConnect()
+
+  return {
+    props:{
+      data:null
+    }
+  }
+}

@@ -6,7 +6,7 @@ import User from "@models/user"
 
 const signIn = async (req, res) => {
   cors(req, res);
-
+  console.log('req.body', req.body)
   const { email, password } = req.body;
   try {
     let user = await User.findOne({
