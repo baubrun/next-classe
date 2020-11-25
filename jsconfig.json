@@ -2,7 +2,9 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
+      "@api-helpers/*": ["fetchers/*"],
       "@components/*": ["components/*"],
+      "@config/*": ["config/*"],
       "@lib/*": ["lib/*"],
       "@models/*": ["models/*"],
       "@redux/*": ["redux/*"],

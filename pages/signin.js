@@ -11,10 +11,10 @@ import Typography from "@material-ui/core/Typography";
 import Icon from "@material-ui/core/Icon";
 import { makeStyles } from "@material-ui/core/styles";
 
-// import api from "../../api/user";
+import api from "fetchers/user"
 // import { setToken } from "../../api/auth";
 import { signInAction } from "@redux/userSlice";
-import Header from "@components/Header"
+// import Header from "@components/Header"
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -49,6 +49,19 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
   },
 }));
+
+
+
+export const getServerSideProps = async (ctx) => {
+
+  return {
+      props:{
+          data: "getServerSideProps"
+      }
+  }
+}
+
+
 
 const SignIn = (props) => {
   const classes = useStyles();
@@ -171,4 +184,7 @@ const SignIn = (props) => {
 };
 
 export default SignIn;
+
+
+
 

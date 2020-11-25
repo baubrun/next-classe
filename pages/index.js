@@ -6,6 +6,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import Header from "@components/Header";
 
+
 const classroomImg = "/images/classroom.jpg";
 
 const useStyles = makeStyles((theme) => ({
@@ -55,3 +56,14 @@ const Home = () => {
 };
 
 export default Home;
+
+
+export const getStaticProps = async (ctx) => {
+
+
+  return {
+    props:{
+      data:null
+    }
+  }
+}
