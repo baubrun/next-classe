@@ -58,12 +58,3 @@ const Home = () => {
 export default Home;
 
 
-export const getStaticProps = async (ctx) => {
-
-
-  return {
-    props:{
-      data:null
-    }
-  }
-}

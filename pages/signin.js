@@ -11,10 +11,9 @@ import Typography from "@material-ui/core/Typography";
 import Icon from "@material-ui/core/Icon";
 import { makeStyles } from "@material-ui/core/styles";
 
-import api from "fetchers/user"
-// import { setToken } from "../../api/auth";
+import api from "@api/user"
 import { signInAction } from "@redux/userSlice";
-// import Header from "@components/Header"
+import dbConnect from "@utils/db"
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -51,15 +50,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-
-export const getServerSideProps = async (ctx) => {
-
-  return {
-      props:{
-          data: "getServerSideProps"
-      }
-  }
-}
 
 
 
@@ -120,7 +110,6 @@ const SignIn = (props) => {
 
   return (
     <>
-    {/* <Header /> */}
       <form>
         <Card className={classes.card}>
           <CardContent>
@@ -187,4 +176,13 @@ export default SignIn;
 
 
 
+export const getServerSideProps = async (ctx) => {
 
+      
+
+  return {
+    props:{
+      data:null
+    }
+  }
+}

@@ -2,14 +2,14 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@api-helpers/*": ["fetchers/*"],
       "@components/*": ["components/*"],
       "@config/*": ["config/*"],
+      "@api/*": ["helpers/api/*"],
       "@lib/*": ["lib/*"],
       "@models/*": ["models/*"],
-      "@redux/*": ["redux/*"],
+      "@redux/*": ["lib/redux/*"],
       "@styles/*": ["styles/*"],
-
+      "@utils/*": ["utils/*"],
     }
   }
 }
