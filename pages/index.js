@@ -1,13 +1,12 @@
-import Head from 'next/head';
+import Head from "next/head";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
-import Header from "@components/Header"
+import Header from "@components/Header";
 
-const classroomImg = "/images/classroom.jpg"
-
+const classroomImg = "/images/classroom.jpg";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -31,30 +30,26 @@ const Home = () => {
 
   return (
     <>
-     <Head>
-        <title>LA CLASSE</title>
-        <link rel="icon" href="/favicon.ico" />
+      <Head>
+        <title> LA CLASSE </title> <link rel="icon" href="/favicon.ico" />
       </Head>
 
-    <Header />
+      <Header />
       <Card className={classes.card}>
         <Typography className={classes.title} variant="h6">
-          Home Page
+          Home Page{" "}
         </Typography>
-
         <CardMedia
           className={classes.media}
-          image={classroomImg}
           title="classroom"
+          image={classroomImg}
         />
-
         <CardContent>
           <Typography variant="body1" component="p">
-            Welcome to LA CLASSE
-          </Typography>
-        </CardContent>
+            Welcome to LA CLASSE{" "}
+          </Typography>{" "}
+        </CardContent>{" "}
       </Card>
-
     </>
   );
 };

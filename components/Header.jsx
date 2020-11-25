@@ -51,7 +51,7 @@ const Header = () => {
           </IconButton>
         </Link>
         {!loggedIn && (
-          <Link href="/signIn">
+          <Link href="/signin">
             <Button className={clsx([classes.button, classes.link])}>
               Sign In
             </Button>
