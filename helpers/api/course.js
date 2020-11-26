@@ -1,10 +1,10 @@
 import axios from "axios";
 import { domain, coursePath } from "./utils";
-import { getToken } from "./auth";
+import auth from "@api/auth"
 
 
 const createCourse = async (data, id = "") => {
-  const token = getToken();
+  const token = auth.isAuthenticated();
   try {
     const res = await axios.post(
       `${domain}/${coursePath}/${id}`,

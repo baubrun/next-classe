@@ -15,6 +15,10 @@ import ArrowForward from "@material-ui/icons/ArrowForward";
 import Person from "@material-ui/icons/Person";
 import Box from "@material-ui/core/Box";
 
+import Header from "@components/Header"
+import dbConnect from "@utils/db"
+
+
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
     padding: theme.spacing(1),
@@ -45,6 +49,8 @@ const Users = (props) => {
   }
 
   return (
+    <>
+    <Header />
     <Paper className={classes.root} elevation={4}>
       <Typography variant="h6" className={classes.title}>
         All Users
@@ -73,12 +79,16 @@ const Users = (props) => {
         })}
       </List>
     </Paper>
+    </>
   );
 };
 
 export default Users;
 
 export const getServerSideProps = async (ctx) => {
+
+  await dbConnect()
+
   const req = await fetch("http://localhost:3000/api/users");
   const res = await req.text();
 

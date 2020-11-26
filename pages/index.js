@@ -6,7 +6,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import Header from "@components/Header";
-import dbConnect from "@utils/db"
+// import dbConnect from "@utils/db"
 
 
 const classroomImg = "/images/classroom.jpg";
@@ -32,11 +32,11 @@ const Home = (props) => {
   const classes = useStyles();
 
 
-    useEffect(() => {
-      if (!props.data.success){
-        throw Error("DB connect error!")
-      }
-    }, [])
+    // useEffect(() => {
+    //   if (props && !props.data.success){
+    //     throw Error("DB connect error!")
+    //   }
+    // }, [])
 
 
   return (
@@ -68,14 +68,14 @@ const Home = (props) => {
 export default Home;
 
 
-export const getStaticProps = async (ctx) => {
-  const db = await dbConnect()
+// export const getStaticProps = async (ctx) => {
+//   const db = await dbConnect()
   
-  return {
-    props:{
-      data: {
-        success: db.isConnected == 1 ? true :  false
-      }
-    }
-  }
-}
+//   return {
+//     props:{
+//       data: {
+//         success: db.isConnected == 1 ? true :  false
+//       }
+//     }
+//   }
+// }

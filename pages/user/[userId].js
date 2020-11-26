@@ -17,10 +17,10 @@ import Typography from "@material-ui/core/Typography";
 import Edit from "@material-ui/icons/Edit";
 import Person from "@material-ui/icons/Person";
 import Divider from "@material-ui/core/Divider";
-import DeleteUser from "./DeleteUser";
 
 import { userState } from "@redux/userSlice";
-
+import DeleteUser from "@components/DeleteUser";
+import Header from "@components/Header";
 import api from "@api/user";
 
 const useStyles = makeStyles((theme) => ({
@@ -43,19 +43,34 @@ const Profile = (props) => {
   const [profile, setProfile] = useState({});
   const [redirect, setRedirect] = useState(false);
 
-  console.log("param id :>>", router.query.allroutes.splice(-1));
-  const profileId = router.query.allroutes.splice(-1);
-  const auth = profileId === user._id;
+  // let profileId = "5fb6c60af624e64b689ec938"
+  let profileId = router.query,userId
+//   let auth;
+
+    console.log("param id :>>", router.query,userId);
+    // const profileId = router.query.allroutes.splice(-1);
+    // const auth = profileId === user._id;
+
 
   const getUser = async (id) => {
     const data = await api.readUser(id);
     if (data) {
       if (data.error) {
         setRedirect(true);
+      } else {
+        setProfile(data.user);
+
       }
-      setProfile(data);
+    
     }
   };
+
+//   useEffect(() => {
+    
+//     // console.log("param id :>>", router.query.allroutes.splice(-1));
+//     // profileId = router.query.allroutes.splice(-1);
+//     // auth = profileId === user._id;
+//   }, []);
 
   useEffect(() => {
     getUser(profileId);
@@ -66,6 +81,8 @@ const Profile = (props) => {
   }
 
   return (
+      <>
+      <Header />
     <Paper className={classes.root} elevation={4}>
       <Typography variant="h6" className={classes.title}>
         Profile
@@ -78,9 +95,11 @@ const Profile = (props) => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText primary={profile.name} secondary={profile.email} />
-          {loggedIn && auth && (
+          {loggedIn && 
+        //   auth && 
+          (
             <ListItemSecondaryAction>
-              <Link to={`/user/edit/${profileId}`}>
+              <Link href={`/user/edit/${profileId}`}>
                 <IconButton color="primary">
                   <Edit />
                 </IconButton>
@@ -97,6 +116,7 @@ const Profile = (props) => {
         </ListItem>
       </List>
     </Paper>
+    </>
   );
 };
 

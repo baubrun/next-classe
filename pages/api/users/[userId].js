@@ -3,9 +3,10 @@ import cors from "@lib/cors";
 import User from "@models/user"
 import config from "@config/env"
 import bcrypt from "bcryptjs";
+import auth from "@api/auth"
 
 
-export default (req, res) => {
+export default async (req, res) => {
     cors(req, res)
     if (req.method === "DELETE") {
             try {
@@ -21,9 +22,11 @@ export default (req, res) => {
     } else {
         cors(req, res)
         if (req.method === "GET") {
-                const token = req.header("x-auth-token")
-                const verified = jwt.verify(token, config.jwtSecret);
                 try {
+                    const {authorization} = req.headers
+                    const token = authorization.replace(/^Bearer\s+/, "");
+                    const verified = jwt.verify(token, config.jwtSecret);
+    
                     let user = await User.findById(verified._id).select("-password -__v")
                     if (user) {
                         return res.json({
@@ -32,7 +35,7 @@ export default (req, res) => {
                     }
                 } catch (error) {
                     return res.status(400).json({
-                        message: error
+                        message: error.message
                     })
             }
         } else {
