@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 const SignIn = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const history = useRouter()
+  const router = useRouter()
   const [values, setValues] = useState({
     created: "",
     email: "",
@@ -101,7 +101,7 @@ const SignIn = (props) => {
   };
 
   const redirectTo = () => {
-    history.push("/")
+    router.push("/")
   }
 
 
@@ -125,7 +125,7 @@ const SignIn = (props) => {
               margin="normal"
               onChange={(evt) => handleChange(evt)}
               type="email"
-              value={values.email}
+              value={values.email || ""}
             ></TextField>
             <br />
             <TextField
@@ -136,7 +136,7 @@ const SignIn = (props) => {
               margin="normal"
               onChange={(evt) => handleChange(evt)}
               type="password"
-              value={values.password}
+              value={values.password || ""}
             />
             {values.error && (
               <Typography color="error" component="p">

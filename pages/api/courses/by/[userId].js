@@ -14,7 +14,7 @@ export default async (req, res) => {
         }
     } else {
         if (req.method === "POST"){
-           (req, res) => {
+            async (req, res) => {
                 const {
                     // files,
                     body: {

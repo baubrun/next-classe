@@ -27,12 +27,12 @@ const useStyles = makeStyles((theme) => ({
 
 const Header = () => {
   const classes = useStyles();
-  const history = useRouter();
+  const router = useRouter();
   const dispatch = useDispatch();
   const { loggedIn, user } = useSelector(userState);
 
   const redirect = (path) => {
-    history.push(path);
+    router.push(path);
   };
 
   const logOut = () => {

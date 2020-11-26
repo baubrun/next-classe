@@ -5,10 +5,9 @@ import config from "@config/env"
 import bcrypt from "bcryptjs";
 
 
-export default async (req, res) => {
+export default (req, res) => {
     cors(req, res)
     if (req.method === "DELETE") {
-        (req, res) => {
             try {
                 const user = req.profile
                 let deletedUser = await user.remove()
@@ -19,11 +18,9 @@ export default async (req, res) => {
                     message: error
                 })
             }
-        }
     } else {
         cors(req, res)
         if (req.method === "GET") {
-            (req, res) => {
                 const token = req.header("x-auth-token")
                 const verified = jwt.verify(token, config.jwtSecret);
                 try {
@@ -37,12 +34,10 @@ export default async (req, res) => {
                     return res.status(400).json({
                         message: error
                     })
-                }
             }
         } else {
             cors(req, res)
             if (req.method === "PATCH") {
-                (req, res) => {
                     try {
                         const {
                             user
@@ -79,6 +74,5 @@ export default async (req, res) => {
                     }
                 }
             }
-        }
     }
 }

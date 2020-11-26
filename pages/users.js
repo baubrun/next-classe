@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Link from 'next/link';
+import Link from "next/link";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -15,14 +15,6 @@ import ArrowForward from "@material-ui/icons/ArrowForward";
 import Person from "@material-ui/icons/Person";
 import Box from "@material-ui/core/Box";
 
-import api from "../../api";
-
-import {
-  usersPath,
-} from "../../api/utils"
-
-
-
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
     padding: theme.spacing(1),
@@ -34,28 +26,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-const Users = () => {
+const Users = (props) => {
   const classes = useStyles();
   const [users, setUsers] = useState([]);
-  const [error, setError] = useState("")
-
-  const getUsers = async () => {
-    const data = await api.list(usersPath)
-    if (data && data.error){
-      setError(data.error)
-    } else {
-      setUsers(data);
-    }
-  }
-
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    getUsers()
-  }, [])
+    if (props && !props.users.error) {
+      setUsers(props.users);
+    } else {
+      setError("Users did not load!")
+    }
+    
+  }, []);
 
   if (error) {
-    return <Box>{error}</Box>
+    return <Box>{error}</Box>;
   }
 
   return (
@@ -68,7 +54,6 @@ const Users = () => {
           return (
             <Link href={"/user/" + user._id} key={idx}>
               <ListItem button>
-                  
                 <ListItemAvatar>
                   <Avatar>
                     <Person />
@@ -92,3 +77,22 @@ const Users = () => {
 };
 
 export default Users;
+
+export const getServerSideProps = async (ctx) => {
+  const req = await fetch("http://localhost:3000/api/users");
+  const res = await req.text();
+
+  if (!res) {
+    return {
+      users: {
+        error: true,
+      },
+    };
+  }
+
+  return {
+    props: {
+      users: JSON.parse(res),
+    },
+  };
+};
