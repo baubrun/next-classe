@@ -29,6 +29,7 @@ export default async (req, res) => {
     
                     let user = await User.findById(verified._id).select("-password -__v")
                     if (user) {
+                        console.log('-- GOT user:>>', user._id)
                         return res.json({
                             user: user
                         })

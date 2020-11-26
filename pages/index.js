@@ -1,13 +1,12 @@
 import Head from "next/head";
-import {useEffect} from "react"
+import { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import Header from "@components/Header";
-// import dbConnect from "@utils/db"
-
+import dbConnect from "@utils/db";
 
 const classroomImg = "/images/classroom.jpg";
 
@@ -30,14 +29,17 @@ const useStyles = makeStyles((theme) => ({
 
 const Home = (props) => {
   const classes = useStyles();
+  const [error, setError] = useState("");
 
+  useEffect(() => {
+    if (props && !props.db) {
+      setError("Site is down....")
+    }
+  }, []);
 
-    // useEffect(() => {
-    //   if (props && !props.data.success){
-    //     throw Error("DB connect error!")
-    //   }
-    // }, [])
-
+  if (error) {
+    return <h1>{error}</h1>;
+  }
 
   return (
     <>
@@ -48,7 +50,7 @@ const Home = (props) => {
       <Header />
       <Card className={classes.card}>
         <Typography className={classes.title} variant="h6">
-          Home Page{" "}
+          Home Page
         </Typography>
         <CardMedia
           className={classes.media}
@@ -57,9 +59,9 @@ const Home = (props) => {
         />
         <CardContent>
           <Typography variant="body1" component="p">
-            Welcome to LA CLASSE{" "}
-          </Typography>{" "}
-        </CardContent>{" "}
+            Welcome to LA CLASSE
+          </Typography>
+        </CardContent>
       </Card>
     </>
   );
@@ -67,15 +69,12 @@ const Home = (props) => {
 
 export default Home;
 
+export const getStaticProps = async (ctx) => {
+  const { isConnected } = await dbConnect();
 
-// export const getStaticProps = async (ctx) => {
-//   const db = await dbConnect()
-  
-//   return {
-//     props:{
-//       data: {
-//         success: db.isConnected == 1 ? true :  false
-//       }
-//     }
-//   }
-// }
+  return {
+    props: {
+      db: isConnected
+    },
+  };
+};

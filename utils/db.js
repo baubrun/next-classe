@@ -1,4 +1,3 @@
-/* This is a database connection function*/
 import mongoose from "mongoose"
 import config from "@config/env"
 const connection = {} 

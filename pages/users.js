@@ -15,9 +15,9 @@ import ArrowForward from "@material-ui/icons/ArrowForward";
 import Person from "@material-ui/icons/Person";
 import Box from "@material-ui/core/Box";
 
-import Header from "@components/Header"
-import dbConnect from "@utils/db"
-
+import Header from "@components/Header";
+// import dbConnect from "@utils/db";
+import auth from "@api/auth"
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
@@ -36,12 +36,11 @@ const Users = (props) => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (props && !props.users.error) {
+    if (props && !props.error) {
       setUsers(props.users);
     } else {
-      setError("Users did not load!")
+      setError("Users did not load!");
     }
-    
   }, []);
 
   if (error) {
@@ -50,59 +49,59 @@ const Users = (props) => {
 
   return (
     <>
-    <Header />
-    <Paper className={classes.root} elevation={4}>
-      <Typography variant="h6" className={classes.title}>
-        All Users
-      </Typography>
-      <List dense>
-        {users.map((user, idx) => {
-          return (
-            <Link href={"/user/" + user._id} key={idx}>
-              <ListItem button>
-                <ListItemAvatar>
-                  <Avatar>
-                    <Person />
-                  </Avatar>
-                </ListItemAvatar>
+      <Header />
+      <Paper className={classes.root} elevation={4}>
+        <Typography variant="h6" className={classes.title}>
+          All Users
+        </Typography>
+        <List dense>
+          {users.map((user, idx) => {
+            return (
+              <Link href={"user/" + user._id} key={idx}>
+                <ListItem button>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <Person />
+                    </Avatar>
+                  </ListItemAvatar>
 
-                <ListItemText primary={user.name} />
+                  <ListItemText primary={user.name} />
 
-                <ListItemSecondaryAction>
-                  <IconButton>
-                    <ArrowForward />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            </Link>
-          );
-        })}
-      </List>
-    </Paper>
+                  <ListItemSecondaryAction>
+                    <IconButton>
+                      <ArrowForward />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              </Link>
+            );
+          })}
+        </List>
+      </Paper>
     </>
   );
 };
 
 export default Users;
 
-export const getServerSideProps = async (ctx) => {
-
-  await dbConnect()
-
-  const req = await fetch("http://localhost:3000/api/users");
+export const getStaticProps = async (ctx) => {
+  const token = auth.isAuthenticated();
+  let req = await fetch(`http://localhost:3000/api/users`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   const res = await req.text();
 
-  if (!res) {
+  if (res) {
     return {
-      users: {
-        error: true,
+      props: {
+        users: JSON.parse(res),
       },
     };
   }
-
   return {
-    props: {
-      users: JSON.parse(res),
-    },
+    props: { error: true },
   };
 };
