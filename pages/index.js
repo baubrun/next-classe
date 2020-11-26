@@ -1,4 +1,5 @@
 import Head from "next/head";
+import {useEffect} from "react"
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -27,8 +28,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Home = () => {
+const Home = (props) => {
   const classes = useStyles();
+
+
+    useEffect(() => {
+      if (!props.data.success){
+        throw Error("DB connect error!")
+      }
+    }, [])
+
 
   return (
     <>
@@ -60,11 +69,13 @@ export default Home;
 
 
 export const getStaticProps = async (ctx) => {
-  await dbConnect()
-
+  const db = await dbConnect()
+  
   return {
     props:{
-      data:null
+      data: {
+        success: db.isConnected == 1 ? true :  false
+      }
     }
   }
 }

@@ -25,4 +25,4 @@ const UserSchema = mongoose.Schema({
   updated: Date,
 });
 
-export default mongoose.model("User", UserSchema);
+export default mongoose.models.User || mongoose.model('User', UserSchema)

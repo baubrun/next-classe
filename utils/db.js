@@ -7,7 +7,7 @@ const connection = {}
 
 const  dbConnect = async () => {
   if (connection.isConnected) {
-    return
+    return 
   }
 
   const db = await mongoose.connect(config.mongoUri, {
@@ -19,6 +19,7 @@ const  dbConnect = async () => {
     })
 
   connection.isConnected = db.connections[0].readyState
+  return connection
 }
 
 export default dbConnect

@@ -11,8 +11,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Library from "@material-ui/icons/LocalLibrary";
 
-import { userState } from "@redux/userSlice";
+import {signOutAction, userState } from "@redux/userSlice";
 import clsx from "clsx";
+import api from "@api/auth"
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -36,7 +37,7 @@ const Header = () => {
 
   const logOut = () => {
     dispatch(signOutAction());
-    deleteToken();
+    api.deleteToken();
   };
 
   return (

@@ -2,13 +2,17 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import cors from "@lib/cors";
 import User from "@models/user"
-
+import config from "@config/env"
 
 const signIn = async (req, res) => {
   cors(req, res);
-  console.log('req.body', req.body)
-  const { email, password } = req.body;
+
   try {
+    const {
+      email,
+      password
+    } = req.body;
+
     let user = await User.findOne({
       email: email,
     });
@@ -24,11 +28,10 @@ const signIn = async (req, res) => {
         error: "Invalid Email or password.",
       });
     } else {
-      const token = jwt.sign(
-        {
+      const token = jwt.sign({
           _id: user.id,
         },
-        process.env.JWT_SECRET
+        config.jwtSecret
       );
 
       return res.json({
