@@ -11,8 +11,8 @@ import Typography from "@material-ui/core/Typography";
 import Icon from "@material-ui/core/Icon";
 import { makeStyles } from "@material-ui/core/styles";
 
-import api from "@api/user"
-import auth from "@api/auth"
+import api from "helpers/fetch/user"
+import auth from "helpers/fetch/auth"
 import { signInAction } from "@redux/userSlice";
 // import dbConnect from "@utils/db";
 

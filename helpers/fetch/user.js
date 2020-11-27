@@ -1,4 +1,4 @@
-import auth from "@api/auth"
+import auth from "helpers/fetch/auth"
 
 const readUser = async (id) => {
   const token = auth.isAuthenticated();

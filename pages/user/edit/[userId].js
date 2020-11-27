@@ -15,7 +15,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import Header from "@components/Header"
 
-import api from "@api/user";
+import api from "helpers/fetch/user";
 import { userState, loadUser } from "@redux/userSlice";
 import { usersPath } from "../../api/utils";
 

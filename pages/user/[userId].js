@@ -22,7 +22,7 @@ import Divider from "@material-ui/core/Divider";
 import { userState } from "@redux/userSlice";
 import DeleteUser from "@components/DeleteUser";
 import Header from "@components/Header";
-import api from "@api/user";
+import api from "helpers/fetch/user";
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
@@ -121,7 +121,7 @@ export default Profile;
 
 export const getServerSideProps = async (ctx) => {
 
-  
+
 
   console.log('params: >>', ctx.params)
 

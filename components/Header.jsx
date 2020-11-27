@@ -13,7 +13,7 @@ import Library from "@material-ui/icons/LocalLibrary";
 
 import {signOutAction, userState } from "@redux/userSlice";
 import clsx from "clsx";
-import api from "@api/auth"
+import api from "helpers/fetch/auth"
 
 const useStyles = makeStyles((theme) => ({
   button: {
