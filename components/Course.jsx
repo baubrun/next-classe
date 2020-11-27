@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import Link from 'next/link';
-import {useRouter} from 'next/router';
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
+import { userState } from "@redux/userSlice";
 
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -26,10 +27,11 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
 import auth from "@helpers/auth";
+// import NewLesson from "@components/NewLesson";
+import Header from "@components/Header";
+import _ from "lodash"
 
-import { userState } from "@redux/userSlice";
 
-import NewLesson from "@components/NewLesson"
 
 const useStyles = makeStyles((theme) => ({
   action: {
@@ -62,10 +64,11 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: "sub",
   },
   media: {
-    height: 190,
     display: "inline-block",
-    width: "100%",
+    height: 190,
     marginLeft: "16px",
+    objectFit: "contain",
+    width: "100%",
   },
   root: theme.mixins.gutters({
     maxWidth: 800,
@@ -96,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Course = (props) => {
   const classes = useStyles();
-  const router = useRouter()
+  const router = useRouter();
   const { loggedIn, user } = useSelector(userState);
   const [course, setCourse] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
@@ -105,205 +108,184 @@ const Course = (props) => {
     redirect: false,
   });
 
-  const courseUrl = ""
+  const courseUrl = "";
 
-  const imageUrl = course.image
-    ? course.image
-    : ""
+  const imageUrl = course.image ? `/images/${course.image}` : "";
 
   const getCourse = (data) => {
-    console.log('props :>> ', data);
-    if (data){
-      if (data.error){
+    console.log("props :>> ", data);
+    if (data) {
+      if (data.error) {
         setValues({
           ...values,
-          error: true
-        })
+          error: true,
+        });
       } else {
-        setCourse(data)
+        setCourse(data);
       }
     }
-
   };
 
-  useEffect(() => {
-    getCourse(props.course);
-  }, [props.course]);
 
+  useEffect(() => {
+      getCourse(props.course);
+  }, [props.course]);
 
   const addLesson = (course) => {
     setCourse(course);
   };
 
 
-
   if (values.redirect) {
-    return router.push("/teach/courses")
+    return router.push("/teach/courses");
   }
 
+  if (_.isEmpty(course)){
+    return null
+  }
 
   return (
-
-  // <div>{JSON.stringify(course)}</div>
-
-
-    <Box className={classes.root}>
-      <Card className={classes.card}>
-        <CardHeader
-          title={course.name}
-          subheader={
-            <Box>
-              <Link
-                href={`/user/${course.instructor._id}`}
-              >
-                <a className={classes.sub}>By {course.instructor.name}</a>
-              </Link>
-              <span className={classes.category}>{course.category}</span>
-            </Box>
-          }
-          action={
-            <>
-              {loggedIn 
-              && auth.isAuthorized(user._id, course.instructor._id) 
-              && 
-              (
-                <span className={classes.action}>
-                  <Link href={`/teach/course/edit/${course._id}`}>
-                    <IconButton color="secondary">
-                      <Edit />
-                    </IconButton>
-                  </Link>
-                  {!course.published ? (
-                    <>
-                      <Button
-                        color="secondary"
-                        variant="outlined"
-                      >
-                        {course.lesson && course.lessons.length === 0
-                          ? "Add atleast 1 lesson to publish"
-                          : "Publish"}
-                      </Button>
-                      delete course here
-                    </>
-                  ) : (
-                    <Button color="primary" variant="outlined">
-                      Published
-                    </Button>
-                  )}
-                </span>
-              )}
-              {course.published && (
-                <Box>
-                  <span className={classes.statSpan}>
-                    <PeopleIcon />
-                   enroll stats here
-                  </span>
-                  <span className={classes.statSpan}>
-                    <CompletedIcon />
-                   completed info here
-                  </span>
-                </Box>
-              )}
-            </>
-          }
-        />
-
-        <Box className={classes.flex}>
-          <CardMedia
-            className={classes.media}
-            image={imageUrl}
-            title={course.name}
-          />
-          <Box className={classes.details}>
-            <Typography variant="body1" className={classes.subheading}>
-              {course.description}
-              <br />
-            </Typography>
-
-            {course.published && (
-              <Box className={classes.enroll}>
-                enroll here
-              </Box>
-            )}
-          </Box>
-        </Box>
-
-        <Divider />
-        <Box>
+    <>
+      <Header />
+      <Box className={classes.root}>
+        <Card className={classes.card}>
           <CardHeader
-            title={
-              <Typography variant="h6" className={classes.subheading}>
-                Lessons
-              </Typography>
-            }
+            title={course.name}
             subheader={
-              <Typography variant="body1" className={classes.subheading}>
-                {course.lessons && course.lessons.length} lessons
-              </Typography>
+              <Box>
+                <Link href={`/user/${course.instructor._id}`}>
+                  <a className={classes.sub}>By {course.instructor.name}</a>
+                </Link>
+                <span className={classes.category}>{course.category}</span>
+              </Box>
             }
             action={
-              loggedIn &&
-              // isAuthorized() &&
-              !course.published && (
-                <span className={classes.action}>
-                  <NewLesson 
-                  courseId={course._id} 
-                  addLesson={addLesson} 
-                  />
-                </span>
-              )
+              <>
+                {loggedIn &&
+                  auth.isAuthorized(user._id, course.instructor._id) && (
+                    <span className={classes.action}>
+                      <Link href={`/teach/course/edit/${course._id}`}>
+                        <IconButton color="secondary">
+                          <Edit />
+                        </IconButton>
+                      </Link>
+                      {!course.published ? (
+                        <>
+                          <Button color="secondary" variant="outlined">
+                            {course.lesson && course.lessons.length === 0
+                              ? "Add atleast 1 lesson to publish"
+                              : "Publish"}
+                          </Button>
+                          delete course here
+                        </>
+                      ) : (
+                        <Button color="primary" variant="outlined">
+                          Published
+                        </Button>
+                      )}
+                    </span>
+                  )}
+                {course.published && (
+                  <Box>
+                    <span className={classes.statSpan}>
+                      <PeopleIcon />
+                      enroll stats here
+                    </span>
+                    <span className={classes.statSpan}>
+                      <CompletedIcon />
+                      completed info here
+                    </span>
+                  </Box>
+                )}
+              </>
             }
           />
-          <List>
-            {course.lessons &&
-              course.lessons.map((lesson, idx) => {
-                return (
-                  <span key={idx}>
-                    <ListItem>
-                      <ListItemAvatar>
-                        <Avatar>{idx + 1}</Avatar>
-                      </ListItemAvatar>
-                      <ListItemText primary={lesson.title} />
-                    </ListItem>
-                    <Divider variant="inset" component="li" />
-                  </span>
-                );
-              })}
-          </List>
-        </Box>
-      </Card>
 
-      <Dialog
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">Publish Course</DialogTitle>
-        <DialogContent>
-          <Typography variant="body1">
-           Publish msg here
-          </Typography>
-          <Typography variant="body1">
-            note here
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            color="primary"
-            onClick={() => setOpenDialog(false)}
-            variant="contained"
-          >
-            Cancel
-          </Button>
-          <Button
-            color="primary"
-            variant="contained"
-          >
-            Publish
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
+          <Box className={classes.flex}>
+            <CardMedia
+              className={classes.media}
+              image={imageUrl}
+              title={course.name}
+            />
+            <Box className={classes.details}>
+              <Typography variant="body1" className={classes.subheading}>
+                {course.description}
+                <br />
+              </Typography>
+
+              {course.published && (
+                <Box className={classes.enroll}>enroll here</Box>
+              )}
+            </Box>
+          </Box>
+
+          <Divider />
+          <Box>
+            <CardHeader
+              title={
+                <Typography variant="h6" className={classes.subheading}>
+                  Lessons
+                </Typography>
+              }
+              subheader={
+                <Typography variant="body1" className={classes.subheading}>
+                  {course.lessons && course.lessons.length} lessons
+                </Typography>
+              }
+              action={
+                loggedIn &&
+                isAuthorized(user._id, course.instructor._id) &&
+                !course.published && (
+                  <span className={classes.action}>
+                    <NewLesson courseId={course._id} addLesson={addLesson} />
+                  </span>
+                )
+              }
+            />
+            <List>
+              {course.lessons &&
+                course.lessons.map((lesson, idx) => {
+                  return (
+                    <span key={idx}>
+                      <ListItem>
+                        <ListItemAvatar>
+                          <Avatar>{idx + 1}</Avatar>
+                        </ListItemAvatar>
+                        <ListItemText primary={lesson.title} />
+                      </ListItem>
+                      <Divider variant="inset" component="li" />
+                    </span>
+                  );
+                })}
+            </List>
+          </Box>
+        </Card>
+
+        <Dialog
+          open={openDialog}
+          onClose={() => setOpenDialog(false)}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title">Publish Course</DialogTitle>
+          <DialogContent>
+            <Typography variant="body1">Publish msg here</Typography>
+            <Typography variant="body1">note here</Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              color="primary"
+              onClick={() => setOpenDialog(false)}
+              variant="contained"
+            >
+              Cancel
+            </Button>
+            <Button color="primary" variant="contained">
+              Publish
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
+    </>
   );
 };
 
