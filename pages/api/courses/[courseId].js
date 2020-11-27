@@ -16,7 +16,7 @@ export default nc({
         onError
     })
     .use(cors())
-    .get(courseController.read)
+    .get(courseController.courseByID)
     // .put(
     // //     // authController.reqSignIn,
     // //     // userController.isInstructor,

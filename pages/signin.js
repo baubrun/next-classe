@@ -170,12 +170,3 @@ const SignIn = (props) => {
 
 export default SignIn;
 
-export const getServerSideProps = async (ctx) => {
-  // await dbConnect();
-
-  return {
-    props: {
-      data: null,
-    },
-  };
-};

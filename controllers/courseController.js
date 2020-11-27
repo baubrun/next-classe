@@ -1,24 +1,24 @@
+import mongoose from "mongoose";
 import Course from "@models/course";
 import onFinished from "on-finished";
 import { moveFilesToApp } from "@lib/multer";
 import path from "path";
-import { valid_OId } from "@helpers/db";
 
-const courseByID = async (req, res, next, id) => {
+const courseByID = async (req, res,) => {
+  const id = req.query.courseId
   try {
-    let course = await Course.findById(id).populate("instructor", "_id name");
-
+    let course = await Course
+    .findById(id)
+    .populate("instructor", "_id name")
     if (!course)
       return res.status(400).json({
-        error: "Course not found.",
-      });
-    req.course = course;
-
-    next();
+        error: "Course not found."
+      })
+      return res.status(200).json(course)
   } catch (error) {
     return res.status(400).json({
-      error: error.message,
-    });
+      error: error.message
+    })
   }
 };
 
@@ -56,8 +56,8 @@ const create = async (req, res, next) => {
     const course = new Course({
       name: name,
       image: file.filename,
-      // instructor: mongoose.Types.ObjectId(instructor),
-      instructor: valid_OId(instructor),
+      instructor: mongoose.Types.ObjectId(instructor),
+      // instructor: valid_OId(instructor),
       description: description,
       category: category,
       published: published,
@@ -91,7 +91,7 @@ const create = async (req, res, next) => {
   }
 };
 
-const listByInstructor = async (req, res) => {
+const courseByInstructor = async (req, res) => {
   try {
     const courses = await Course.find({
       instructor: req.query.userId,
@@ -110,8 +110,15 @@ const newLesson = async (req, res) => {
     let lesson = req.body.lesson;
     let newLesson = await Course.findByIdAndUpdate(
       req.course._id,
-      { $push: { lessons: lesson }, updated: Date.now() },
-      { new: true }
+      {
+        $push: {
+          lessons: lesson,
+        },
+        updated: Date.now(),
+      },
+      {
+        new: true,
+      }
     )
       .populate("instructor", "_id name")
       .exec();
@@ -123,19 +130,33 @@ const newLesson = async (req, res) => {
   }
 };
 
-const read = (req, res) => {
-  req.course.image = undefined;
-  return res.json(req.course);
+const read = async (req, res) => {
+  console.log("in read courses");
+  // try {
+    let course = await Course.findById(req.query.courseId).populate("instructor", "_id name");
+    // let course = await Course.findById(mongoose.Types.ObjectId(req.query.courseId))
+  //   if (!course)
+  //     return res.status(400).json({
+  //       error: "Course not found.",
+  //     });
+  //   return res.status(200).json(course);
+  // } catch (error) {
+  //   return res.status(400).json({
+  //     error: error.message,
+  //   });
+  console.log("course :>> ", course);
+  // }
+
+  // res.json({
+  //   req: valid_OId(req.query.courseId),
+  //   type: typeof valid_OId(req.query.courseId)
+  // })
 };
 
 export default {
   create,
   courseByID,
-  listByInstructor,
+  courseByInstructor,
   newLesson,
   read,
 };
-
-
-
-

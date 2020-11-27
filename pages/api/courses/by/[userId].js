@@ -19,7 +19,7 @@ export default nc({
         onError
     })
     .use(cors())
-    .get(courseController.listByInstructor)
+    .get(courseController.courseByInstructor)
     .post(
         courseController.create,
     )
