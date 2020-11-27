@@ -27,7 +27,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
 import auth from "@helpers/auth";
-// import NewLesson from "@components/NewLesson";
+import NewLesson from "@components/NewLesson";
 import Header from "@components/Header";
 import _ from "lodash"
 
@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
     height: 190,
     marginLeft: "16px",
     objectFit: "contain",
-    width: "100%",
+    width: "50%",
   },
   root: theme.mixins.gutters({
     maxWidth: 800,
@@ -234,10 +234,10 @@ const Course = (props) => {
               }
               action={
                 loggedIn &&
-                isAuthorized(user._id, course.instructor._id) &&
+                auth.isAuthorized(user._id, course.instructor._id) &&
                 !course.published && (
                   <span className={classes.action}>
-                    <NewLesson courseId={course._id} addLesson={addLesson} />
+                    <NewLesson addLesson={addLesson} courseId={course._id}  />
                   </span>
                 )
               }
