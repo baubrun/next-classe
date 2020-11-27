@@ -74,7 +74,7 @@ const list = async (req, res) => {
 }
 
 
-const remove = (req, res) => {
+const remove = async (req, res) => {
     try {
         const user = req.profile
         let deletedUser = await user.remove()
@@ -160,7 +160,7 @@ const userByID = async (req, res, next, id) => {
   }
   
 
-const update = (req, res) => {
+const update = async (req, res) => {
     try {
         const {
             user

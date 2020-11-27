@@ -1,4 +1,4 @@
-import cors from "@lib/cors";
+import cors from "cors"
 import nc from 'next-connect';
 import userController from "@ctrl/userController"
 

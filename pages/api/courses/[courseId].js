@@ -1,5 +1,5 @@
 
-import cors from "@lib/cors";
+import cors from "cors"
 import nc from 'next-connect';
 import courseController from "@ctrl/courseController"
 
