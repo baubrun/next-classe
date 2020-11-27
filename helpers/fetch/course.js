@@ -1,6 +1,6 @@
 import axios from "axios";
 import { domain, coursePath } from "./utils";
-import auth from "helpers/fetch/auth"
+import auth from "@helpers/auth"
 
 
 const createCourse = async (data, id = "") => {

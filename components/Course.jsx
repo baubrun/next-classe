@@ -25,8 +25,7 @@ import PeopleIcon from "@material-ui/icons/Group";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
-// import api from "../../api/course";
-import {isAuthenticated} from "@helpers/auth";
+import auth from "@helpers/auth";
 
 import { userState } from "@redux/userSlice";
 
@@ -99,7 +98,7 @@ const Course = (props) => {
   const classes = useStyles();
   const router = useRouter()
   const { loggedIn, user } = useSelector(userState);
-  const [course, setCourse] = useState({ instructor: {} });
+  const [course, setCourse] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
   const [values, setValues] = useState({
     error: "",
@@ -112,25 +111,24 @@ const Course = (props) => {
     ? course.image
     : ""
 
-  const getCourse = async () => {
-    console.log('props :>> ', props);
-    // const data = await api.read(courseUrl);
-    // // console.log("data :>> ", data);
-    // if (data) {
-    //   if (data.error) {
-    //     setValues({
-    //       ...values,
-    //       error: data.error,
-    //     });
-    //   } else {
-    //     setCourse(data);
-    //   }
-    // }
+  const getCourse = (data) => {
+    console.log('props :>> ', data);
+    if (data){
+      if (data.error){
+        setValues({
+          ...values,
+          error: true
+        })
+      } else {
+        setCourse(data)
+      }
+    }
+
   };
 
   useEffect(() => {
-    getCourse();
-  }, [courseUrl]);
+    getCourse(props.course);
+  }, [props.course]);
 
 
   const addLesson = (course) => {
@@ -145,165 +143,167 @@ const Course = (props) => {
 
 
   return (
-    <div>course page</div>
 
-    // <Box className={classes.root}>
-    //   <Card className={classes.card}>
-    //     <CardHeader
-    //       title={course.name}
-    //       subheader={
-    //         <Box>
-    //           <Link
-    //             href={`/user/${course.instructor._id}`}
-    //           >
-    //             <a className={classes.sub}>By {course.instructor.name}</a>
-    //           </Link>
-    //           <span className={classes.category}>{course.category}</span>
-    //         </Box>
-    //       }
-    //       action={
-    //         <>
-    //           {loggedIn 
-    //         //   && isAuthenticated(user._id, course.instructor._id) 
-    //           && 
-    //           (
-    //             <span className={classes.action}>
-    //               <Link href={`/teach/course/edit/${course._id}`}>
-    //                 <IconButton color="secondary">
-    //                   <Edit />
-    //                 </IconButton>
-    //               </Link>
-    //               {!course.published ? (
-    //                 <>
-    //                   <Button
-    //                     color="secondary"
-    //                     variant="outlined"
-    //                   >
-    //                     {course.lesson && course.lessons.length === 0
-    //                       ? "Add atleast 1 lesson to publish"
-    //                       : "Publish"}
-    //                   </Button>
-    //                   delete course here
-    //                 </>
-    //               ) : (
-    //                 <Button color="primary" variant="outlined">
-    //                   Published
-    //                 </Button>
-    //               )}
-    //             </span>
-    //           )}
-    //           {course.published && (
-    //             <Box>
-    //               <span className={classes.statSpan}>
-    //                 <PeopleIcon />
-    //                enroll stats here
-    //               </span>
-    //               <span className={classes.statSpan}>
-    //                 <CompletedIcon />
-    //                completed info here
-    //               </span>
-    //             </Box>
-    //           )}
-    //         </>
-    //       }
-    //     />
+  // <div>{JSON.stringify(course)}</div>
 
-    //     <Box className={classes.flex}>
-    //       <CardMedia
-    //         className={classes.media}
-    //         image={imageUrl}
-    //         title={course.name}
-    //       />
-    //       <Box className={classes.details}>
-    //         <Typography variant="body1" className={classes.subheading}>
-    //           {course.description}
-    //           <br />
-    //         </Typography>
 
-    //         {course.published && (
-    //           <Box className={classes.enroll}>
-    //             enroll here
-    //           </Box>
-    //         )}
-    //       </Box>
-    //     </Box>
+    <Box className={classes.root}>
+      <Card className={classes.card}>
+        <CardHeader
+          title={course.name}
+          subheader={
+            <Box>
+              <Link
+                href={`/user/${course.instructor._id}`}
+              >
+                <a className={classes.sub}>By {course.instructor.name}</a>
+              </Link>
+              <span className={classes.category}>{course.category}</span>
+            </Box>
+          }
+          action={
+            <>
+              {loggedIn 
+              && auth.isAuthorized(user._id, course.instructor._id) 
+              && 
+              (
+                <span className={classes.action}>
+                  <Link href={`/teach/course/edit/${course._id}`}>
+                    <IconButton color="secondary">
+                      <Edit />
+                    </IconButton>
+                  </Link>
+                  {!course.published ? (
+                    <>
+                      <Button
+                        color="secondary"
+                        variant="outlined"
+                      >
+                        {course.lesson && course.lessons.length === 0
+                          ? "Add atleast 1 lesson to publish"
+                          : "Publish"}
+                      </Button>
+                      delete course here
+                    </>
+                  ) : (
+                    <Button color="primary" variant="outlined">
+                      Published
+                    </Button>
+                  )}
+                </span>
+              )}
+              {course.published && (
+                <Box>
+                  <span className={classes.statSpan}>
+                    <PeopleIcon />
+                   enroll stats here
+                  </span>
+                  <span className={classes.statSpan}>
+                    <CompletedIcon />
+                   completed info here
+                  </span>
+                </Box>
+              )}
+            </>
+          }
+        />
 
-    //     <Divider />
-    //     <Box>
-    //       <CardHeader
-    //         title={
-    //           <Typography variant="h6" className={classes.subheading}>
-    //             Lessons
-    //           </Typography>
-    //         }
-    //         subheader={
-    //           <Typography variant="body1" className={classes.subheading}>
-    //             {course.lessons && course.lessons.length} lessons
-    //           </Typography>
-    //         }
-    //         action={
-    //           loggedIn &&
-    //           isAuthenticated() &&
-    //           !course.published && (
-    //             <span className={classes.action}>
-    //               <NewLesson 
-    //               courseId={course._id} 
-    //               addLesson={addLesson} 
-    //               />
-    //             </span>
-    //           )
-    //         }
-    //       />
-    //       <List>
-    //         {course.lessons &&
-    //           course.lessons.map((lesson, idx) => {
-    //             return (
-    //               <span key={idx}>
-    //                 <ListItem>
-    //                   <ListItemAvatar>
-    //                     <Avatar>{idx + 1}</Avatar>
-    //                   </ListItemAvatar>
-    //                   <ListItemText primary={lesson.title} />
-    //                 </ListItem>
-    //                 <Divider variant="inset" component="li" />
-    //               </span>
-    //             );
-    //           })}
-    //       </List>
-    //     </Box>
-    //   </Card>
+        <Box className={classes.flex}>
+          <CardMedia
+            className={classes.media}
+            image={imageUrl}
+            title={course.name}
+          />
+          <Box className={classes.details}>
+            <Typography variant="body1" className={classes.subheading}>
+              {course.description}
+              <br />
+            </Typography>
 
-    //   <Dialog
-    //     open={openDialog}
-    //     onClose={() => setOpenDialog(false)}
-    //     aria-labelledby="form-dialog-title"
-    //   >
-    //     <DialogTitle id="form-dialog-title">Publish Course</DialogTitle>
-    //     <DialogContent>
-    //       <Typography variant="body1">
-    //        Publish msg here
-    //       </Typography>
-    //       <Typography variant="body1">
-    //         note here
-    //       </Typography>
-    //     </DialogContent>
-    //     <DialogActions>
-    //       <Button
-    //         color="primary"
-    //         onClick={() => setOpenDialog(false)}
-    //         variant="contained"
-    //       >
-    //         Cancel
-    //       </Button>
-    //       <Button
-    //         color="primary"
-    //         variant="contained"
-    //       >
-    //         Publish
-    //       </Button>
-    //     </DialogActions>
-    //   </Dialog>
-    // </Box>
+            {course.published && (
+              <Box className={classes.enroll}>
+                enroll here
+              </Box>
+            )}
+          </Box>
+        </Box>
+
+        <Divider />
+        <Box>
+          <CardHeader
+            title={
+              <Typography variant="h6" className={classes.subheading}>
+                Lessons
+              </Typography>
+            }
+            subheader={
+              <Typography variant="body1" className={classes.subheading}>
+                {course.lessons && course.lessons.length} lessons
+              </Typography>
+            }
+            action={
+              loggedIn &&
+              // isAuthorized() &&
+              !course.published && (
+                <span className={classes.action}>
+                  <NewLesson 
+                  courseId={course._id} 
+                  addLesson={addLesson} 
+                  />
+                </span>
+              )
+            }
+          />
+          <List>
+            {course.lessons &&
+              course.lessons.map((lesson, idx) => {
+                return (
+                  <span key={idx}>
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar>{idx + 1}</Avatar>
+                      </ListItemAvatar>
+                      <ListItemText primary={lesson.title} />
+                    </ListItem>
+                    <Divider variant="inset" component="li" />
+                  </span>
+                );
+              })}
+          </List>
+        </Box>
+      </Card>
+
+      <Dialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">Publish Course</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+           Publish msg here
+          </Typography>
+          <Typography variant="body1">
+            note here
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            color="primary"
+            onClick={() => setOpenDialog(false)}
+            variant="contained"
+          >
+            Cancel
+          </Button>
+          <Button
+            color="primary"
+            variant="contained"
+          >
+            Publish
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 };
 

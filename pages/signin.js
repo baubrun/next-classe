@@ -12,9 +12,8 @@ import Icon from "@material-ui/core/Icon";
 import { makeStyles } from "@material-ui/core/styles";
 
 import api from "helpers/fetch/user";
-import auth from "helpers/fetch/auth";
+import auth from "@helpers/auth";
 import { signInAction } from "@redux/userSlice";
-// import dbConnect from "@utils/db";
 
 const useStyles = makeStyles((theme) => ({
   card: {

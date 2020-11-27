@@ -17,7 +17,7 @@ import Box from "@material-ui/core/Box";
 
 import Header from "@components/Header";
 // import dbConnect from "@utils/db";
-import auth from "helpers/fetch/auth"
+import auth from "@helpers/auth"
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
