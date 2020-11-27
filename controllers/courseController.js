@@ -94,7 +94,7 @@ const create = async (req, res, next) => {
 const listByInstructor = async (req, res) => {
   try {
     const courses = await Course.find({
-      instructor: req.profile._id,
+      instructor: req.query.userId,
     }).populate("instructor", "_id name");
 
     return res.status(200).json(courses);

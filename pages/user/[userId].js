@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect, } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
@@ -21,10 +21,8 @@ import Divider from "@material-ui/core/Divider";
 import { userState } from "@redux/userSlice";
 import DeleteUser from "@components/DeleteUser";
 import Header from "@components/Header";
-import auth from "@helpers/auth"
-import dbConnect from "@utils/db";
-
-
+import auth from "@helpers/auth";
+// import dbConnect from "@utils/db";
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
@@ -44,17 +42,18 @@ const Profile = (props) => {
   const { loggedIn, user } = useSelector(userState);
   const router = useRouter();
   const [profile, setProfile] = useState({});
-  const [redirect, setRedirect] = useState(false);
 
+  const getProfile = (profile) => {
+    if (props && !props.error) {
+      setProfile(profile);
+    }
+  };
 
   useEffect(() => {
-    if (props && !props.error)
-    setProfile(props.user)
-    console.log('props.user._id :>>', props.user._id)
+    getProfile(props.user);
   }, [props.user]);
 
-
-  if (redirect) {
+  if (!loggedIn) {
     return router.push("/signin");
   }
 
@@ -73,10 +72,7 @@ const Profile = (props) => {
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary={profile.name} secondary={profile.email} />
-            { 
-            auth.isAuthorized(user._id, props.user._id) &&
-            (
-              
+            {auth.isAuthorized(user._id, props.user._id) && (
               <ListItemSecondaryAction>
                 <Link href={`/user/edit/${profile._id}`}>
                   <IconButton color="primary">
@@ -101,13 +97,10 @@ const Profile = (props) => {
 
 export default Profile;
 
-
 export const getServerSideProps = async (ctx) => {
+  // await dbConnect();
 
-  await dbConnect();
-
-
-  const id = ctx.params.userId
+  const id = ctx.params.userId;
   let req = await fetch(`http://localhost:3000/api/users/${id}`);
   const res = await req.text();
 

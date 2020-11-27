@@ -14,7 +14,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import api from "helpers/fetch/user";
 import auth from "helpers/fetch/auth";
 import { signInAction } from "@redux/userSlice";
-import dbConnect from "@utils/db";
+// import dbConnect from "@utils/db";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -171,7 +171,7 @@ const SignIn = (props) => {
 export default SignIn;
 
 export const getServerSideProps = async (ctx) => {
-  await dbConnect();
+  // await dbConnect();
 
   return {
     props: {

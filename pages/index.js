@@ -31,6 +31,12 @@ const Home = (props) => {
   const classes = useStyles();
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    if (!props.connected){
+      setError(true)
+    }
+  })
+
 
   if (error) {
     return <h1>{error}</h1>;
@@ -64,12 +70,14 @@ const Home = (props) => {
 
 export default Home;
 
-export const getStaticProps = async (ctx) => {
-  await dbConnect();
+export async function getServerSideProps(context) {
+  const connected = await dbConnect()
+
+  
 
   return {
     props: {
-      data: null
-    },
-  };
-};
+      connected
+    } 
+  }
+}
