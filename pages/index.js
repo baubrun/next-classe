@@ -31,11 +31,6 @@ const Home = (props) => {
   const classes = useStyles();
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (props && !props.db) {
-      setError("Site is down....")
-    }
-  }, []);
 
   if (error) {
     return <h1>{error}</h1>;
@@ -70,11 +65,11 @@ const Home = (props) => {
 export default Home;
 
 export const getStaticProps = async (ctx) => {
-  const { isConnected } = await dbConnect();
+  await dbConnect();
 
   return {
     props: {
-      db: isConnected
+      data: null
     },
   };
 };

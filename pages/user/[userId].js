@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
@@ -21,6 +21,10 @@ import Divider from "@material-ui/core/Divider";
 import { userState } from "@redux/userSlice";
 import DeleteUser from "@components/DeleteUser";
 import Header from "@components/Header";
+import auth from "@helpers/auth"
+import dbConnect from "@utils/db";
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
@@ -45,8 +49,9 @@ const Profile = (props) => {
 
   useEffect(() => {
     if (props && !props.error)
-    setProfile(props.userId)
-  }, [props.userId]);
+    setProfile(props.user)
+    console.log('props.user._id :>>', props.user._id)
+  }, [props.user]);
 
 
   if (redirect) {
@@ -68,8 +73,10 @@ const Profile = (props) => {
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary={profile.name} secondary={profile.email} />
-            {loggedIn && (
-              //   auth &&
+            { 
+            auth.isAuthorized(user._id, props.user._id) &&
+            (
+              
               <ListItemSecondaryAction>
                 <Link href={`/user/edit/${profile._id}`}>
                   <IconButton color="primary">
@@ -96,6 +103,10 @@ export default Profile;
 
 
 export const getServerSideProps = async (ctx) => {
+
+  await dbConnect();
+
+
   const id = ctx.params.userId
   let req = await fetch(`http://localhost:3000/api/users/${id}`);
   const res = await req.text();
@@ -103,7 +114,7 @@ export const getServerSideProps = async (ctx) => {
   if (res && !res.error) {
     return {
       props: {
-        userId: JSON.parse(res),
+        user: JSON.parse(res),
       },
     };
   }
