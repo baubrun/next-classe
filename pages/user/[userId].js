@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
-// import dbConnect from "@utils/db";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -22,7 +21,6 @@ import Divider from "@material-ui/core/Divider";
 import { userState } from "@redux/userSlice";
 import DeleteUser from "@components/DeleteUser";
 import Header from "@components/Header";
-import api from "helpers/fetch/user";
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
@@ -43,31 +41,12 @@ const Profile = (props) => {
   const router = useRouter();
   const [profile, setProfile] = useState({});
   const [redirect, setRedirect] = useState(false);
-  const [currentId, setCurrentId] = useState("");
 
-
-  // const prevId = prevIdRef.current;
-
-  const getUser = async (id) => {
-    const data = await api.readUser(id);
-    if (data) {
-      if (data && data.error) {
-        setRedirect(true);
-      }
-      setProfile(data.user);
-    }
-  };
 
   useEffect(() => {
-    getUser(props.userId);
+    if (props && !props.error)
+    setProfile(props.userId)
   }, [props.userId]);
-
-  // useEffect(() => {
-  //   if (profileId !== prevId)
-  //   getUser(profileId);
-  // }, [prevId]);
-
-
 
 
   if (redirect) {
@@ -78,9 +57,6 @@ const Profile = (props) => {
     <>
       <Header />
       <Paper className={classes.root} elevation={4}>
-        <Typography variant="h6" className={classes.title} component="p">
-          {currentId}
-        </Typography>
         <Typography variant="h6" className={classes.title}>
           Profile
         </Typography>
@@ -120,16 +96,18 @@ export default Profile;
 
 
 export const getServerSideProps = async (ctx) => {
+  const id = ctx.params.userId
+  let req = await fetch(`http://localhost:3000/api/users/${id}`);
+  const res = await req.text();
 
-
-
-  console.log('params: >>', ctx.params)
-
-
-  return {
-    props: {
-      userId: ctx.params.userId
+  if (res && !res.error) {
+    return {
+      props: {
+        userId: JSON.parse(res),
+      },
+    };
   }
+  return {
+    props: { error: res.error },
+  };
 };
-
-}

@@ -5,12 +5,6 @@ import bcrypt from "bcryptjs";
 const SALT = 10
 
 
-const read = (req, res) => {
-    req.profile.password = undefined
-    req.profile.__v = undefined
-    return res.json(req.profile)
-}
-
 
 const create = async (req, res) => {
     const {
@@ -72,6 +66,22 @@ const list = async (req, res) => {
         })
     }
 }
+
+const read = async (req, res,) => {
+    try {
+      let user = await User.findById(req.query.userId).select("-password -__v")
+      if (!user)
+        return res.status(400).json({
+          error: "User not found."
+        })
+      return res.status(200).json(user)
+    } catch (error) {
+      return res.status(400).json({
+        error: error.message
+      })
+    }
+  }
+
 
 
 const remove = async (req, res) => {
@@ -136,28 +146,6 @@ const signIn = async (req, res) => {
 
 
 
-const signOut = async (req, res) => {
-    return res.status(200).json({
-        message: "Signed out."
-    })
-};
-
-
-const userByID = async (req, res, next, id) => {
-    try {
-      let user = await User.findById(id)
-      if (!user)
-        return res.status(400).json({
-          error: "User not found.absolute"
-        })
-      req.profile = user
-      next()
-    } catch (err) {
-      return res.status(400).json({
-        error: "Could not retrieve user.absolute"
-      })
-    }
-  }
   
 
 const update = async (req, res) => {
@@ -205,7 +193,7 @@ export default {
     read,
     remove,
     signIn,
-    userByID,
+    // userByID,
     update,
   }
   

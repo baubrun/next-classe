@@ -1,7 +1,7 @@
-import { useRouter } from 'next/router';
-import  { useState } from "react";
+import { useRouter } from "next/router";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
-import Link from 'next/link';
+import Link from "next/link";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -11,10 +11,10 @@ import Typography from "@material-ui/core/Typography";
 import Icon from "@material-ui/core/Icon";
 import { makeStyles } from "@material-ui/core/styles";
 
-import api from "helpers/fetch/user"
-import auth from "helpers/fetch/auth"
+import api from "helpers/fetch/user";
+import auth from "helpers/fetch/auth";
 import { signInAction } from "@redux/userSlice";
-// import dbConnect from "@utils/db";
+import dbConnect from "@utils/db";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -50,14 +50,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-
-
-
 const SignIn = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const router = useRouter()
+  const router = useRouter();
   const [values, setValues] = useState({
     created: "",
     email: "",
@@ -77,18 +73,17 @@ const SignIn = (props) => {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    
+
     const user = {
       email: values.email,
       password: values.password,
-    }
+    };
 
     const data = await api.signIn(user);
     if (data) {
       if (data.error) {
         setValues({ ...values, error: data.error });
       } else {
-        
         auth.setToken(data.token, () => {
           dispatch(
             signInAction({
@@ -102,12 +97,11 @@ const SignIn = (props) => {
   };
 
   const redirectTo = () => {
-    router.push("/")
-  }
-
+    router.push("/");
+  };
 
   if (values.redirect) {
-    redirectTo()
+    redirectTo();
   }
 
   return (
@@ -176,3 +170,12 @@ const SignIn = (props) => {
 
 export default SignIn;
 
+export const getServerSideProps = async (ctx) => {
+  await dbConnect();
+
+  return {
+    props: {
+      data: null,
+    },
+  };
+};

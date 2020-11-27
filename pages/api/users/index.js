@@ -3,11 +3,13 @@ import nc from 'next-connect';
 import userController from "@ctrl/userController"
 
 
-const onError = (err, req, res, next) => {
+const onError = (error, req, res, next) => {
 
-    res.status(500).end(err.toString());
-    next()
-}
+    if (error){
+        return  res.status(500).json(error.toString());
+      } 
+      next()
+  }
 
 export default nc({
         onError

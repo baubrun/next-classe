@@ -4,9 +4,11 @@ import nc from 'next-connect';
 import courseController from "@ctrl/courseController"
 
 
-const onError = (err, req, res, next) => {
+const onError = (error, req, res, next) => {
 
-    res.status(500).end(err.toString());
+    if (error){
+      return  res.status(500).json(error.toString());
+    } 
     next()
 }
 
