@@ -1,37 +1,28 @@
 // import authController from "@ctrl/authController";
 import courseController from "@ctrl/courseController";
 // import userController from "@ctrl/userController";
+import nc from "next-connect"
+import cors from "cors"
 
 
-import {
-    upload
-} from "@lib/multer"
 
-const router = express.Router()
+const onError = (error, req, res, next) => {
 
+    if (error){
+         res.status(500).json(error.toString());
+         return
+      } 
+      next()
+  }
 
-router.route("/api/courses/by/:userId")
-    .get(
-        courseController.listByInstructor
-    )
+export default nc({
+        onError
+    })
+    .use(cors())
+    .get(courseController.listByInstructor)
     .post(
-        upload.any(),
         courseController.create,
     )
 
 
-router.route("/api/courses/:courseId")
-    .get(courseController.read)
-    // .put(
-    //     courseController.update,
-    // )
 
-
-router.route("/api/courses/:courseId/lesson/new")
-    .put(
-        // authController.reqSignIn,
-        // userController.isInstructor,
-        courseController.newLesson,
-    )
-
-export default router

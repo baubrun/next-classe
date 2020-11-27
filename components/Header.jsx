@@ -61,7 +61,7 @@ const Header = () => {
         {loggedIn && (
           <>
             {user.instructor && (
-              <Link href="/teach/courses">
+              <Link href={`/teach/courses/${user._id}`}>
                 <Button className={clsx([classes.button, classes.link])}>
                   <Library /> Teach
                 </Button>

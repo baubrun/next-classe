@@ -22,7 +22,6 @@ import { userState } from "@redux/userSlice";
 import DeleteUser from "@components/DeleteUser";
 import Header from "@components/Header";
 import auth from "@helpers/auth";
-// import dbConnect from "@utils/db";
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
@@ -98,7 +97,6 @@ const Profile = (props) => {
 export default Profile;
 
 export const getServerSideProps = async (ctx) => {
-  // await dbConnect();
 
   const id = ctx.params.userId;
   let req = await fetch(`http://localhost:3000/api/users/${id}`);

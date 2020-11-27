@@ -36,4 +36,4 @@ const CourseSchema = new mongoose.Schema({
   lessons: [LessonSchema]
 })
 
-export default mongoose.model.Course || mongoose.model("Course", CourseSchema)
+export default mongoose.models.Course || mongoose.model("Course", CourseSchema)
