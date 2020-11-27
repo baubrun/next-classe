@@ -48,6 +48,18 @@ const create = async (req, res) => {
     }
 }
 
+const isInstructor = (req, res, next) => {
+    const isInstructor =
+        req.course &&
+        req.auth &&
+        req.course.instructor._id == req.auth._id
+    if (!isInstructor) {
+        return res.status(403).json({
+            error: "User is not authorized."
+        })
+    }
+    next()
+}
 
 
 const list = async (req, res) => {
@@ -73,8 +85,62 @@ const remove = (req, res) => {
             message: error
         })
     }
-
 }
+
+
+const signIn = async (req, res) => {
+    const {
+        email,
+        password
+    } = req.body
+    try {
+        let user = await User.findOne({
+            email: email,
+        });
+
+        if (!user) {
+            return res.status(401).json({
+                error: "User not found.",
+            });
+        }
+        const validPassword = await bcrypt.compare(password, user.password)
+        if (!validPassword) {
+            return res.status(401).json({
+                error: "Invalid Email or password.",
+            });
+        } else {
+            const token = jwt.sign({
+                    _id: user.id
+                },
+                process.env.JWT_SECRET,
+            )
+
+            return res.json({
+                token,
+                user: {
+                    created: user.created,
+                    instructor: user.instructor,
+                    email: user.email,
+                    _id: user._id,
+                    name: user.name,
+                }
+            });
+        }
+
+    } catch (error) {
+        return res.status(401).json({
+            error: error.message
+        });
+    }
+};
+
+
+
+const signOut = async (req, res) => {
+    return res.status(200).json({
+        message: "Signed out."
+    })
+};
 
 
 const userByID = async (req, res, next, id) => {
@@ -134,11 +200,12 @@ const update = (req, res) => {
 
 export default {
     create,
-    userByID,
-    read,
+    isInstructor,
     list,
+    read,
     remove,
+    signIn,
+    userByID,
     update,
-    // isEducator
   }
   

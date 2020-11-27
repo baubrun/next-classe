@@ -1,55 +1,28 @@
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import cors from "@lib/cors";
-import User from "@models/user"
-import config from "@config/env"
+import nc from 'next-connect';
+import userController from "@ctrl/userController"
 
-const signIn = async (req, res) => {
-  cors(req, res);
 
-  try {
-    const {
-      email,
-      password
-    } = req.body;
+const onError = (err, req, res, next) => {
 
-    let user = await User.findOne({
-      email: email,
-    });
+    res.status(500).end(err.toString());
+    next()
+}
 
-    if (!user) {
-      return res.status(401).json({
-        error: "User not found.",
-      });
-    }
-    const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) {
-      return res.status(401).json({
-        error: "Invalid Email or password.",
-      });
-    } else {
-      const token = jwt.sign({
-          _id: user.id,
-        },
-        config.jwtSecret
-      );
+export default nc({
+        onError
+    })
+    .use(cors())
+    .post(
+        userController.signIn,
+    )
 
-      return res.json({
-        token,
-        user: {
-          created: user.created,
-          instructor: user.instructor,
-          email: user.email,
-          _id: user._id,
-          name: user.name,
-        },
-      });
-    }
-  } catch (error) {
-    return res.status(401).json({
-      error: error.message,
-    });
-  }
-};
 
-export default signIn
+
+
+
+
+
+
+
+

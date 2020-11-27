@@ -6,6 +6,7 @@
       "@components/*": ["components/*"],
       "@config/*": ["config/*"],
       "@fetch/*": ["helpers/fetch/*"],
+      "@helpers/*": ["helpers/*"],
       "@lib/*": ["lib/*"],
       "@models/*": ["models/*"],
       "@redux/*": ["lib/redux/*"],
